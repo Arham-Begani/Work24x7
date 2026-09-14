@@ -1,50 +1,37 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 
 export function AnimatedGears() {
+  const [isHovered, setIsHovered] = useState(false);
+
   // 16-tooth precision industrial gears
   const teethCount = 16;
-  const pitchRadius = 56;
-  const rootRadius = 45;
-  const outerRadius = 66;
-
-  // Center distance = 2 * pitchRadius = 112px
-  // Gear 1 at (104, 105), Gear 2 at (216, 105)
-  // Slower, deliberate, heavy industrial movement (22 seconds per cycle)
-  const cycleDuration = "22s";
+  const cycleDuration = isHovered ? "8s" : "22s";
 
   return (
-    <div className="relative flex flex-col items-center justify-center select-none py-2">
+    <div
+      className="relative flex flex-col items-center justify-center cursor-pointer select-none group py-4"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      title="Interactive mechanical mesh"
+    >
       <svg
         viewBox="0 0 320 210"
-        className="w-80 sm:w-[440px] md:w-[500px] h-auto"
+        className="w-72 sm:w-[420px] md:w-[480px] h-auto transition-all duration-700 ease-out group-hover:scale-[1.04]"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          {/* Real directional drop shadow cast by physical gears onto mounting surface */}
+          {/* Dynamic physical drop shadow: deepens on hover */}
           <filter id="gearCastShadow" x="-30%" y="-30%" width="160%" height="160%">
             <feDropShadow
-              dx="3"
-              dy="5"
-              stdDeviation="4"
+              dx="2"
+              dy={isHovered ? "7" : "4"}
+              stdDeviation={isHovered ? "6" : "4"}
               floodColor="#000000"
-              floodOpacity="0.85"
+              floodOpacity={isHovered ? "0.95" : "0.8"}
             />
-          </filter>
-
-          {/* Soft ambient occlusion shadow between teeth */}
-          <filter id="aoShadow" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur in="SourceAlpha" stdDeviation="1.5" />
-            <feOffset dx="1" dy="2" result="offsetblur" />
-            <feComponentTransfer>
-              <feFuncA type="linear" slope="0.6" />
-            </feComponentTransfer>
-            <feMerge>
-              <feMergeNode />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
           </filter>
 
           {/* Machined Steel Sheen - Left Gear */}
@@ -52,31 +39,31 @@ export function AnimatedGears() {
             <stop offset="0%" stopColor="#6e7278" />
             <stop offset="22%" stopColor="#4a4d52" />
             <stop offset="45%" stopColor="#82878e" />
-            <stop offset="50%" stopColor="#9da3ab" />
+            <stop offset="50%" stopColor={isHovered ? "#b8bfc9" : "#9da3ab"} />
             <stop offset="68%" stopColor="#555555" />
             <stop offset="90%" stopColor="#3c3e42" />
             <stop offset="100%" stopColor="#2c2e32" />
           </linearGradient>
 
-          {/* Machined Steel Sheen - Right Gear (Counter-angled light reflection) */}
+          {/* Machined Steel Sheen - Right Gear */}
           <linearGradient id="steelSecondary" x1="100%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" stopColor="#757980" />
             <stop offset="25%" stopColor="#4e5157" />
             <stop offset="47%" stopColor="#8c9199" />
-            <stop offset="52%" stopColor="#a5abb5" />
+            <stop offset="52%" stopColor={isHovered ? "#c0c7d4" : "#a5abb5"} />
             <stop offset="70%" stopColor="#555555" />
             <stop offset="92%" stopColor="#383a3e" />
             <stop offset="100%" stopColor="#282a2e" />
           </linearGradient>
 
-          {/* Heavy Beveled Rim Gradient */}
+          {/* Rim Bevel */}
           <linearGradient id="rimBevel" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#8b9099" />
+            <stop offset="0%" stopColor={isHovered ? "#9ca2ad" : "#8b9099"} />
             <stop offset="50%" stopColor="#555555" />
             <stop offset="100%" stopColor="#25272a" />
           </linearGradient>
 
-          {/* Dark Milled Recess Floor */}
+          {/* Recessed Web Interior */}
           <radialGradient id="recessWeb" cx="45%" cy="45%" r="55%">
             <stop offset="0%" stopColor="#26282b" />
             <stop offset="85%" stopColor="#131416" />
@@ -85,20 +72,20 @@ export function AnimatedGears() {
 
           {/* Turned Hub Boss */}
           <radialGradient id="hubBoss" cx="38%" cy="38%" r="62%">
-            <stop offset="0%" stopColor="#8c9199" />
+            <stop offset="0%" stopColor={isHovered ? "#a3a9b3" : "#8c9199"} />
             <stop offset="45%" stopColor="#555555" />
             <stop offset="85%" stopColor="#2f3136" />
             <stop offset="100%" stopColor="#1e2023" />
           </radialGradient>
 
-          {/* Socket Head Cap Screw / Hex Bolt */}
+          {/* Bolt Shading */}
           <linearGradient id="boltShading" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#9ea4ad" />
             <stop offset="50%" stopColor="#585c63" />
             <stop offset="100%" stopColor="#25272b" />
           </linearGradient>
 
-          {/* High-precision involute tooth: Base width=12 (from -6 to 6), Tip width=7 (from -3.5 to 3.5), chamfered land */}
+          {/* High-precision involute tooth */}
           <path
             id="involuteTooth"
             d="M -3.2 -66 C -1 -66.3 1 -66.3 3.2 -66 C 4.2 -65.8 4.6 -64.8 4.7 -63.5 L 6 -45 C 4 -44.5 -4 -44.5 -6 -45 L -4.7 -63.5 C -4.6 -64.8 -4.2 -65.8 -3.2 -66 Z"
@@ -111,6 +98,7 @@ export function AnimatedGears() {
             style={{
               animation: `spinCW ${cycleDuration} linear infinite`,
               transformOrigin: "0px 0px",
+              transition: "animation-duration 0.6s ease",
             }}
           >
             {/* 16 Machined Involute Teeth */}
@@ -118,22 +106,21 @@ export function AnimatedGears() {
               const angle = (360 / teethCount) * i;
               return (
                 <g key={`g1-tooth-${i}`} transform={`rotate(${angle})`}>
-                  {/* Tooth body */}
                   <use
                     href="#involuteTooth"
                     fill="url(#steelPrimary)"
                     stroke="#232528"
                     strokeWidth="0.75"
                   />
-                  {/* Leading edge machined light reflection */}
+                  {/* Leading edge light reflection */}
                   <line
                     x1="-3.2"
                     y1="-65.5"
                     x2="-5.8"
                     y2="-45.5"
-                    stroke="#a8afb8"
-                    strokeWidth="0.5"
-                    opacity="0.8"
+                    stroke={isHovered ? "#d4d8df" : "#a8afb8"}
+                    strokeWidth={isHovered ? "0.75" : "0.5"}
+                    opacity={isHovered ? "1" : "0.8"}
                   />
                   {/* Trailing edge flank shadow */}
                   <line
@@ -149,11 +136,11 @@ export function AnimatedGears() {
               );
             })}
 
-            {/* Gear Body Rim (Outer Radius r=46) with Machined Bevel */}
+            {/* Gear Body Rim */}
             <circle
               r="46"
               fill="url(#rimBevel)"
-              stroke="#7a7f87"
+              stroke={isHovered ? "#9297a1" : "#7a7f87"}
               strokeWidth="0.75"
             />
             <circle
@@ -163,7 +150,7 @@ export function AnimatedGears() {
               strokeWidth="0.5"
             />
 
-            {/* Recessed Milled Web Interior */}
+            {/* Recessed Milled Web */}
             <circle
               r="36"
               fill="url(#recessWeb)"
@@ -178,10 +165,9 @@ export function AnimatedGears() {
               opacity="0.5"
             />
 
-            {/* 6 Precision Machined Weight-Reduction Bores with Counter-bore Chamfer */}
+            {/* 6 Weight-Reduction Bores */}
             {[0, 60, 120, 180, 240, 300].map((angle) => (
               <g key={`g1-bore-${angle}`} transform={`rotate(${angle})`}>
-                {/* Chamfer outer ring */}
                 <circle
                   cx="24"
                   cy="0"
@@ -190,7 +176,6 @@ export function AnimatedGears() {
                   stroke="#585c63"
                   strokeWidth="0.6"
                 />
-                {/* Dark through-hole */}
                 <circle
                   cx="24"
                   cy="0"
@@ -199,7 +184,6 @@ export function AnimatedGears() {
                   stroke="#101114"
                   strokeWidth="0.7"
                 />
-                {/* Inner bore shadow */}
                 <path
                   d="M 20.5 0 A 4.2 4.2 0 0 1 27.5 0"
                   fill="none"
@@ -214,7 +198,7 @@ export function AnimatedGears() {
             <circle
               r="15"
               fill="url(#hubBoss)"
-              stroke="#7a7f87"
+              stroke={isHovered ? "#9297a1" : "#7a7f87"}
               strokeWidth="0.8"
             />
             <circle
@@ -224,7 +208,7 @@ export function AnimatedGears() {
               strokeWidth="0.5"
             />
 
-            {/* Industrial Hex Nut / Arbor Bolt */}
+            {/* Hex Nut */}
             <polygon
               points="0,-7.5 6.5,-3.75 6.5,3.75 0,7.5 -6.5,3.75 -6.5,-3.75"
               fill="url(#boltShading)"
@@ -232,7 +216,7 @@ export function AnimatedGears() {
               strokeWidth="0.75"
             />
 
-            {/* Hex socket internal drive (Allen key recess) */}
+            {/* Hex socket internal drive */}
             <polygon
               points="0,-3.8 3.3,-1.9 3.3,1.9 0,3.8 -3.3,1.9 -3.3,-1.9"
               fill="#07080d"
@@ -243,17 +227,12 @@ export function AnimatedGears() {
         </g>
 
         {/* =================== GEAR 2 (Right - Counter-Clockwise) =================== */}
-        {/*
-          Coplanar alignment at (216, 105).
-          Center distance = 112px (exactly 2 * pitchRadius 56px).
-          Phase offset: 360 / (16 * 2) = 11.25 degrees.
-          This places a tooth valley precisely at 180° to meet Gear 1's tooth at 0°.
-        */}
         <g transform="translate(216, 105)" filter="url(#gearCastShadow)">
           <g
             style={{
               animation: `spinCCW ${cycleDuration} linear infinite`,
               transformOrigin: "0px 0px",
+              transition: "animation-duration 0.6s ease",
             }}
           >
             {/* 16 Machined Involute Teeth with 11.25° Phase Offset */}
@@ -267,15 +246,15 @@ export function AnimatedGears() {
                     stroke="#232528"
                     strokeWidth="0.75"
                   />
-                  {/* Leading edge light reflection */}
+                  {/* Leading edge reflection */}
                   <line
                     x1="-3.2"
                     y1="-65.5"
                     x2="-5.8"
                     y2="-45.5"
-                    stroke="#a8afb8"
-                    strokeWidth="0.5"
-                    opacity="0.8"
+                    stroke={isHovered ? "#d4d8df" : "#a8afb8"}
+                    strokeWidth={isHovered ? "0.75" : "0.5"}
+                    opacity={isHovered ? "1" : "0.8"}
                   />
                   {/* Trailing edge shadow */}
                   <line
@@ -295,7 +274,7 @@ export function AnimatedGears() {
             <circle
               r="46"
               fill="url(#rimBevel)"
-              stroke="#7a7f87"
+              stroke={isHovered ? "#9297a1" : "#7a7f87"}
               strokeWidth="0.75"
             />
             <circle
@@ -320,7 +299,7 @@ export function AnimatedGears() {
               opacity="0.5"
             />
 
-            {/* 6 Precision Machined Weight-Reduction Bores */}
+            {/* 6 Weight-Reduction Bores */}
             {[0, 60, 120, 180, 240, 300].map((angle) => (
               <g key={`g2-bore-${angle}`} transform={`rotate(${angle})`}>
                 <circle
@@ -353,7 +332,7 @@ export function AnimatedGears() {
             <circle
               r="15"
               fill="url(#hubBoss)"
-              stroke="#7a7f87"
+              stroke={isHovered ? "#9297a1" : "#7a7f87"}
               strokeWidth="0.8"
             />
             <circle

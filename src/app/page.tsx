@@ -23,7 +23,7 @@ export default function Home() {
         </a>
       </header>
 
-      {/* Center Hero: Heading + Two #555555 Moving Animated Gears + Work in progress */}
+      {/* Center Hero: Heading Work24x7.ai + Physically Interlocking Metallic Gears + Work in Progress */}
       <main className="relative z-10 flex flex-col items-center justify-center text-center my-auto py-12 max-w-3xl mx-auto w-full">
         {/* Status Pill */}
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-xs font-mono text-zinc-400 mb-8">
@@ -31,12 +31,12 @@ export default function Home() {
           <span className="tracking-wide">System Under Development</span>
         </div>
 
-        {/* Main Center Heading - Solid White, No Gradient */}
+        {/* Main Center Heading: Work24x7.ai */}
         <h1 className="text-5xl sm:text-7xl md:text-8xl font-black tracking-tight text-white mb-6">
-          Work24x7
+          Work24x7<span className="text-zinc-500">.ai</span>
         </h1>
 
-        {/* Two Animated Gears in #555555 */}
+        {/* Physically Interlocking Metallic Gears */}
         <div className="my-6 sm:my-8">
           <AnimatedGears />
         </div>

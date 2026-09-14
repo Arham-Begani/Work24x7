@@ -5,13 +5,15 @@ import React, { useState } from "react";
 export function AnimatedGears() {
   const [speed, setSpeed] = useState<"normal" | "fast">("normal");
 
-  const teeth1 = 12;
-  const teeth2 = 12;
+  const teethCount = 12;
 
-  const rOuter = 60;
-  const rPitch = 50;
-  const toothWidth = 14;
-  const toothHeight = 22;
+  // Mechanical Dimensions
+  // Pitch radius = 54px.
+  // Root radius = 42px (base of teeth, top of rim).
+  // Outer radius = 64px (tips of teeth).
+  // Center distance between coplanar gears = 2 * Pitch Radius = 108px.
+  // Gear 1 at (105, 105), Gear 2 at (213, 105).
+  // Both gears are strictly coplanar on y = 105, side-by-side (not stacked or one above another).
 
   const duration = speed === "fast" ? "4s" : "9s";
 
@@ -22,167 +24,257 @@ export function AnimatedGears() {
       onMouseLeave={() => setSpeed("normal")}
       title="Hover to accelerate gears"
     >
-      {/* Main SVG with 2 interlocking animated gears - pure #555555 mechanical finish */}
       <svg
-        viewBox="0 0 310 210"
-        className="w-72 sm:w-96 md:w-[420px] h-auto transition-transform duration-300"
+        viewBox="0 0 320 210"
+        className="w-80 sm:w-[420px] md:w-[480px] h-auto transition-transform duration-300"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
-        {/* =================== GEAR 1 (Clockwise) =================== */}
-        <g transform="translate(110, 125)">
+        <defs>
+          {/* Metallic brushed steel shader for Gear 1 */}
+          <linearGradient id="metalGear1" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#7a7a7a" />
+            <stop offset="25%" stopColor="#484848" />
+            <stop offset="48%" stopColor="#9a9a9a" />
+            <stop offset="52%" stopColor="#b5b5b5" />
+            <stop offset="70%" stopColor="#555555" />
+            <stop offset="100%" stopColor="#383838" />
+          </linearGradient>
+
+          {/* Metallic brushed steel shader for Gear 2 (counter-angled reflection) */}
+          <linearGradient id="metalGear2" x1="100%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#828282" />
+            <stop offset="28%" stopColor="#4a4a4a" />
+            <stop offset="50%" stopColor="#adadad" />
+            <stop offset="72%" stopColor="#555555" />
+            <stop offset="100%" stopColor="#353535" />
+          </linearGradient>
+
+          {/* Hub & Axle metallic shaders */}
+          <radialGradient id="metalHub" cx="40%" cy="40%" r="60%">
+            <stop offset="0%" stopColor="#999999" />
+            <stop offset="50%" stopColor="#555555" />
+            <stop offset="100%" stopColor="#2b2b2b" />
+          </radialGradient>
+
+          <linearGradient id="metalNut" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#b3b3b3" />
+            <stop offset="50%" stopColor="#666666" />
+            <stop offset="100%" stopColor="#333333" />
+          </linearGradient>
+
+          {/* Trapezoidal tooth profile with involute-style rounded corners */}
+          {/* Base: r=42, width=16 (x: -8 to 8). Tip: r=64, width=10 (x: -5 to 5). */}
+          <path
+            id="trapezoidTooth"
+            d="M -4.5 -64 Q 0 -64.6 4.5 -64 Q 5.5 -63.8 5.8 -62 L 8 -42 L -8 -42 L -5.8 -62 Q -5.5 -63.8 -4.5 -64 Z"
+          />
+        </defs>
+
+        {/* =================== GEAR 1 (Left - Clockwise) =================== */}
+        <g transform="translate(105, 105)">
           <g
             style={{
               animation: `spinCW ${duration} linear infinite`,
               transformOrigin: "0px 0px",
             }}
           >
-            {/* 12 Teeth */}
-            {Array.from({ length: teeth1 }).map((_, i) => {
-              const angle = (360 / teeth1) * i;
-              return (
-                <rect
-                  key={`g1-tooth-${i}`}
-                  x={-toothWidth / 2}
-                  y={-rOuter}
-                  width={toothWidth}
-                  height={toothHeight}
-                  rx="2"
-                  fill="#555555"
-                  transform={`rotate(${angle})`}
+            {/* 12 Involute Tapered Teeth in metallic #555555 */}
+            {Array.from({ length: teethCount }).map((_, i) => (
+              <g key={`g1-tooth-${i}`} transform={`rotate(${(360 / teethCount) * i})`}>
+                <use
+                  href="#trapezoidTooth"
+                  fill="url(#metalGear1)"
+                  stroke="#222222"
+                  strokeWidth="0.8"
                 />
-              );
-            })}
+                {/* Tooth highlight edge */}
+                <line
+                  x1="-4.5"
+                  y1="-63.5"
+                  x2="-7.5"
+                  y2="-42.5"
+                  stroke="#a3a3a3"
+                  strokeWidth="0.6"
+                  opacity="0.8"
+                />
+              </g>
+            ))}
 
-            {/* Outer Rim Ring */}
+            {/* Gear Body Rim (Outer Circle r=44) */}
             <circle
-              r={rPitch - 1}
-              fill="#555555"
-              stroke="#666666"
+              r="44"
+              fill="url(#metalGear1)"
+              stroke="#8a8a8a"
               strokeWidth="1"
             />
 
-            {/* Recessed Track */}
+            {/* Machined Circular Groove (Recessed web track) */}
             <circle
-              r={rPitch - 12}
-              fill="#07080d"
-              stroke="#444444"
-              strokeWidth="1"
+              r="34"
+              fill="#18181b"
+              stroke="#383838"
+              strokeWidth="1.2"
+            />
+            <circle
+              r="31"
+              fill="#111113"
+              stroke="#262626"
+              strokeWidth="0.8"
             />
 
-            {/* 4 Spokes */}
-            {[0, 45, 90, 135, 180, 225, 270, 315].map((spokeAngle) => (
-              <line
-                key={`g1-spoke-${spokeAngle}`}
-                x1="0"
-                y1="0"
-                x2={rPitch - 12}
-                y2="0"
-                stroke="#555555"
-                strokeWidth="4"
-                strokeLinecap="round"
-                transform={`rotate(${spokeAngle})`}
-              />
+            {/* 6 Machined Lightening / Weight-Reduction Holes */}
+            {[0, 60, 120, 180, 240, 300].map((angle) => (
+              <g key={`g1-hole-${angle}`} transform={`rotate(${angle})`}>
+                <circle
+                  cx="23"
+                  cy="0"
+                  r="5.5"
+                  fill="#07080d"
+                  stroke="#404040"
+                  strokeWidth="1"
+                />
+                <circle
+                  cx="23"
+                  cy="0"
+                  r="4.5"
+                  fill="none"
+                  stroke="#1f1f1f"
+                  strokeWidth="0.8"
+                />
+              </g>
             ))}
 
-            {/* Inner Hub */}
+            {/* Center Boss / Hub */}
             <circle
-              r="22"
-              fill="#555555"
-              stroke="#666666"
-              strokeWidth="1.5"
+              r="15"
+              fill="url(#metalHub)"
+              stroke="#9e9e9e"
+              strokeWidth="1.2"
             />
 
-            {/* Central Axle Hole */}
-            <circle r="9" fill="#07080d" stroke="#333333" strokeWidth="2" />
+            {/* Machined Axle Hex Nut */}
+            <polygon
+              points="0,-8 6.9,-4 6.9,4 0,8 -6.9,4 -6.9,-4"
+              fill="url(#metalNut)"
+              stroke="#262626"
+              strokeWidth="0.8"
+            />
 
-            {/* Mechanical Bolt Accents */}
-            {[0, 90, 180, 270].map((dotAngle) => (
-              <circle
-                key={`g1-dot-${dotAngle}`}
-                cx="15"
-                cy="0"
-                r="1.5"
-                fill="#777777"
-                transform={`rotate(${dotAngle})`}
-              />
-            ))}
+            {/* Central Dark Bore / Shaft Hole */}
+            <circle r="3.5" fill="#07080d" stroke="#1c1c1c" strokeWidth="1" />
           </g>
         </g>
 
-        {/* =================== GEAR 2 (Counter-Clockwise) =================== */}
-        <g transform="translate(192, 70)">
+        {/* =================== GEAR 2 (Right - Counter-Clockwise) =================== */}
+        {/*
+          Strictly coplanar with Gear 1 at y = 105, x = 105 + 108 = 213.
+          Center distance = 108px (exactly 2 * pitch radius).
+          Initial offset of 15° gives Gear 2 a valley directly at the mesh point (left, 180°),
+          allowing Gear 1's tooth (right, 0°) to interlock and mesh physically without overlap!
+        */}
+        <g transform="translate(213, 105)">
           <g
             style={{
               animation: `spinCCW ${duration} linear infinite`,
               transformOrigin: "0px 0px",
             }}
           >
-            {/* 12 Teeth (15° offset for intermeshing) */}
-            {Array.from({ length: teeth2 }).map((_, i) => {
-              const angle = (360 / teeth2) * i + 15;
-              return (
-                <rect
-                  key={`g2-tooth-${i}`}
-                  x={-toothWidth / 2}
-                  y={-rOuter}
-                  width={toothWidth}
-                  height={toothHeight}
-                  rx="2"
-                  fill="#555555"
-                  transform={`rotate(${angle})`}
+            {/* 12 Involute Tapered Teeth with 15° Phase Offset */}
+            {Array.from({ length: teethCount }).map((_, i) => (
+              <g
+                key={`g2-tooth-${i}`}
+                transform={`rotate(${(360 / teethCount) * i + 15})`}
+              >
+                <use
+                  href="#trapezoidTooth"
+                  fill="url(#metalGear2)"
+                  stroke="#222222"
+                  strokeWidth="0.8"
                 />
-              );
-            })}
-
-            {/* Outer Rim Ring */}
-            <circle
-              r={rPitch - 1}
-              fill="#555555"
-              stroke="#666666"
-              strokeWidth="1"
-            />
-
-            {/* Recessed Track */}
-            <circle
-              r={rPitch - 12}
-              fill="#07080d"
-              stroke="#444444"
-              strokeWidth="1"
-            />
-
-            {/* 6 Decorative Cutout Holes */}
-            {[0, 60, 120, 180, 240, 300].map((holeAngle) => (
-              <circle
-                key={`g2-hole-${holeAngle}`}
-                cx="25"
-                cy="0"
-                r="6.5"
-                fill="#07080d"
-                stroke="#444444"
-                strokeWidth="1"
-                transform={`rotate(${holeAngle})`}
-              />
+                {/* Tooth highlight edge */}
+                <line
+                  x1="-4.5"
+                  y1="-63.5"
+                  x2="-7.5"
+                  y2="-42.5"
+                  stroke="#a3a3a3"
+                  strokeWidth="0.6"
+                  opacity="0.8"
+                />
+              </g>
             ))}
 
-            {/* Center Hub */}
+            {/* Gear Body Rim (Outer Circle r=44) */}
             <circle
-              r="18"
-              fill="#555555"
-              stroke="#666666"
-              strokeWidth="1.5"
+              r="44"
+              fill="url(#metalGear2)"
+              stroke="#8a8a8a"
+              strokeWidth="1"
             />
 
-            {/* Central Axle Hole */}
-            <circle r="7.5" fill="#07080d" stroke="#333333" strokeWidth="2" />
+            {/* Machined Circular Groove */}
+            <circle
+              r="34"
+              fill="#18181b"
+              stroke="#383838"
+              strokeWidth="1.2"
+            />
+            <circle
+              r="31"
+              fill="#111113"
+              stroke="#262626"
+              strokeWidth="0.8"
+            />
+
+            {/* 6 Machined Lightening Holes */}
+            {[0, 60, 120, 180, 240, 300].map((angle) => (
+              <g key={`g2-hole-${angle}`} transform={`rotate(${angle})`}>
+                <circle
+                  cx="23"
+                  cy="0"
+                  r="5.5"
+                  fill="#07080d"
+                  stroke="#404040"
+                  strokeWidth="1"
+                />
+                <circle
+                  cx="23"
+                  cy="0"
+                  r="4.5"
+                  fill="none"
+                  stroke="#1f1f1f"
+                  strokeWidth="0.8"
+                />
+              </g>
+            ))}
+
+            {/* Center Boss / Hub */}
+            <circle
+              r="15"
+              fill="url(#metalHub)"
+              stroke="#9e9e9e"
+              strokeWidth="1.2"
+            />
+
+            {/* Machined Axle Hex Nut */}
+            <polygon
+              points="0,-8 6.9,-4 6.9,4 0,8 -6.9,4 -6.9,-4"
+              fill="url(#metalNut)"
+              stroke="#262626"
+              strokeWidth="0.8"
+            />
+
+            {/* Central Dark Bore / Shaft Hole */}
+            <circle r="3.5" fill="#07080d" stroke="#1c1c1c" strokeWidth="1" />
           </g>
         </g>
       </svg>
 
-      {/* Clean minimal hover hint */}
+      {/* Subtle mechanical status text */}
       <div className="flex items-center gap-2 mt-4 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-[11px] font-mono text-zinc-400">
-        <span className="w-1.5 h-1.5 rounded-full bg-zinc-500" />
-        <span>{speed === "fast" ? "Accelerated" : "Hover to accelerate"}</span>
+        <span className="w-1.5 h-1.5 rounded-full bg-zinc-400" />
+        <span>{speed === "fast" ? "Mechanical Mesh • 2x Velocity" : "Coplanar Mesh • Interlocking"}</span>
       </div>
 
       <style jsx global>{`

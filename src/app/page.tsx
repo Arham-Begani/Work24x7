@@ -1,19 +1,24 @@
 import { AnimatedGears } from "@/components/AnimatedGears";
+import { MiniGear } from "@/components/MiniGear";
 
 export default function Home() {
   return (
     <div className="relative min-h-screen w-full bg-[#08090d] text-zinc-100 flex flex-col justify-between items-center px-6 py-12 selection:bg-zinc-800 selection:text-zinc-200 overflow-hidden font-sans">
-      {/* Background grid pattern */}
+      {/* Background subtle grid pattern */}
       <div className="absolute inset-0 bg-grid opacity-20 pointer-events-none" />
 
-      {/* Empty top placeholder to balance vertical centering */}
+      {/* Top spacer to balance vertical centering */}
       <div className="h-6 w-full" />
 
-      {/* Main Center: Heading + Continuous Interlocking Mechanical Gears + Work in Progress */}
+      {/* Main Center: Heading with MiniGear dot + Continuous Interlocking Gears + Work in Progress */}
       <main className="relative z-10 flex flex-col items-center justify-center text-center my-auto max-w-xl mx-auto w-full">
-        {/* Main Center Heading */}
-        <h1 className="text-5xl sm:text-7xl md:text-8xl font-semibold tracking-[-0.04em] text-zinc-100 leading-none mb-6">
-          Work24x7<span className="font-normal text-zinc-400">.ai</span>
+        {/* Main Center Heading: Work24x7 [MiniGear] ai */}
+        <h1 className="flex items-center justify-center text-5xl sm:text-7xl md:text-8xl font-semibold tracking-[-0.04em] text-zinc-100 leading-none mb-6">
+          <span>Work24x7</span>
+          <span className="inline-flex items-center justify-center mx-1 sm:mx-2 align-middle">
+            <MiniGear />
+          </span>
+          <span className="font-normal text-zinc-400">ai</span>
         </h1>
 
         {/* Continuously Interlocking Precision Steel Gears */}

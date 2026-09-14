@@ -1,36 +1,28 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 
 export function AnimatedGears() {
-  const [isHovered, setIsHovered] = useState(false);
-
-  // 16-tooth precision industrial gears
   const teethCount = 16;
-  const cycleDuration = isHovered ? "8s" : "22s";
+  const cycleDuration = "20s";
 
   return (
-    <div
-      className="relative flex flex-col items-center justify-center cursor-pointer select-none group py-4"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      title="Interactive mechanical mesh"
-    >
+    <div className="relative flex flex-col items-center justify-center select-none py-2 pointer-events-none">
       <svg
         viewBox="0 0 320 210"
-        className="w-72 sm:w-[420px] md:w-[480px] h-auto transition-all duration-700 ease-out group-hover:scale-[1.04]"
+        className="w-72 sm:w-[420px] md:w-[480px] h-auto"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          {/* Dynamic physical drop shadow: deepens on hover */}
+          {/* Constant directional physical drop shadow */}
           <filter id="gearCastShadow" x="-30%" y="-30%" width="160%" height="160%">
             <feDropShadow
               dx="2"
-              dy={isHovered ? "7" : "4"}
-              stdDeviation={isHovered ? "6" : "4"}
+              dy="5"
+              stdDeviation="4"
               floodColor="#000000"
-              floodOpacity={isHovered ? "0.95" : "0.8"}
+              floodOpacity="0.85"
             />
           </filter>
 
@@ -39,7 +31,7 @@ export function AnimatedGears() {
             <stop offset="0%" stopColor="#6e7278" />
             <stop offset="22%" stopColor="#4a4d52" />
             <stop offset="45%" stopColor="#82878e" />
-            <stop offset="50%" stopColor={isHovered ? "#b8bfc9" : "#9da3ab"} />
+            <stop offset="50%" stopColor="#9da3ab" />
             <stop offset="68%" stopColor="#555555" />
             <stop offset="90%" stopColor="#3c3e42" />
             <stop offset="100%" stopColor="#2c2e32" />
@@ -50,7 +42,7 @@ export function AnimatedGears() {
             <stop offset="0%" stopColor="#757980" />
             <stop offset="25%" stopColor="#4e5157" />
             <stop offset="47%" stopColor="#8c9199" />
-            <stop offset="52%" stopColor={isHovered ? "#c0c7d4" : "#a5abb5"} />
+            <stop offset="52%" stopColor="#a5abb5" />
             <stop offset="70%" stopColor="#555555" />
             <stop offset="92%" stopColor="#383a3e" />
             <stop offset="100%" stopColor="#282a2e" />
@@ -58,7 +50,7 @@ export function AnimatedGears() {
 
           {/* Rim Bevel */}
           <linearGradient id="rimBevel" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor={isHovered ? "#9ca2ad" : "#8b9099"} />
+            <stop offset="0%" stopColor="#8b9099" />
             <stop offset="50%" stopColor="#555555" />
             <stop offset="100%" stopColor="#25272a" />
           </linearGradient>
@@ -72,7 +64,7 @@ export function AnimatedGears() {
 
           {/* Turned Hub Boss */}
           <radialGradient id="hubBoss" cx="38%" cy="38%" r="62%">
-            <stop offset="0%" stopColor={isHovered ? "#a3a9b3" : "#8c9199"} />
+            <stop offset="0%" stopColor="#8c9199" />
             <stop offset="45%" stopColor="#555555" />
             <stop offset="85%" stopColor="#2f3136" />
             <stop offset="100%" stopColor="#1e2023" />
@@ -98,7 +90,6 @@ export function AnimatedGears() {
             style={{
               animation: `spinCW ${cycleDuration} linear infinite`,
               transformOrigin: "0px 0px",
-              transition: "animation-duration 0.6s ease",
             }}
           >
             {/* 16 Machined Involute Teeth */}
@@ -118,9 +109,9 @@ export function AnimatedGears() {
                     y1="-65.5"
                     x2="-5.8"
                     y2="-45.5"
-                    stroke={isHovered ? "#d4d8df" : "#a8afb8"}
-                    strokeWidth={isHovered ? "0.75" : "0.5"}
-                    opacity={isHovered ? "1" : "0.8"}
+                    stroke="#a8afb8"
+                    strokeWidth="0.5"
+                    opacity="0.8"
                   />
                   {/* Trailing edge flank shadow */}
                   <line
@@ -140,7 +131,7 @@ export function AnimatedGears() {
             <circle
               r="46"
               fill="url(#rimBevel)"
-              stroke={isHovered ? "#9297a1" : "#7a7f87"}
+              stroke="#7a7f87"
               strokeWidth="0.75"
             />
             <circle
@@ -198,7 +189,7 @@ export function AnimatedGears() {
             <circle
               r="15"
               fill="url(#hubBoss)"
-              stroke={isHovered ? "#9297a1" : "#7a7f87"}
+              stroke="#7a7f87"
               strokeWidth="0.8"
             />
             <circle
@@ -232,7 +223,6 @@ export function AnimatedGears() {
             style={{
               animation: `spinCCW ${cycleDuration} linear infinite`,
               transformOrigin: "0px 0px",
-              transition: "animation-duration 0.6s ease",
             }}
           >
             {/* 16 Machined Involute Teeth with 11.25° Phase Offset */}
@@ -252,9 +242,9 @@ export function AnimatedGears() {
                     y1="-65.5"
                     x2="-5.8"
                     y2="-45.5"
-                    stroke={isHovered ? "#d4d8df" : "#a8afb8"}
-                    strokeWidth={isHovered ? "0.75" : "0.5"}
-                    opacity={isHovered ? "1" : "0.8"}
+                    stroke="#a8afb8"
+                    strokeWidth="0.5"
+                    opacity="0.8"
                   />
                   {/* Trailing edge shadow */}
                   <line
@@ -274,7 +264,7 @@ export function AnimatedGears() {
             <circle
               r="46"
               fill="url(#rimBevel)"
-              stroke={isHovered ? "#9297a1" : "#7a7f87"}
+              stroke="#7a7f87"
               strokeWidth="0.75"
             />
             <circle
@@ -332,7 +322,7 @@ export function AnimatedGears() {
             <circle
               r="15"
               fill="url(#hubBoss)"
-              stroke={isHovered ? "#9297a1" : "#7a7f87"}
+              stroke="#7a7f87"
               strokeWidth="0.8"
             />
             <circle
